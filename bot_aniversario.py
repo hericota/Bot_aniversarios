@@ -121,22 +121,27 @@ async def remover_aniversario(interaction: discord.Interaction):
 # ----------------- COMANDO /PROXIMO_ANIVER -----------------
 @tree.command(name="proximo_aniver", description="Mostra quem é o próximo a fazer aniversário neste servidor")
 async def proximo_aniver(interaction: discord.Interaction):
+    await interaction.response.defer(ephemeral=False)  # evita erro de resposta duplicada
+
     guild_id = interaction.guild_id
     dados = carregar_dados(guild_id)
     aniversarios = dados["aniversarios"]
 
     if not aniversarios:
-        await interaction.response.send_message("📭 Nenhum aniversário registrado ainda.", ephemeral=True)
+        await interaction.followup.send("📭 Nenhum aniversário registrado ainda.")
         return
 
-    hoje = datetime.now()
+    from datetime import date
+    hoje = date.today()
     proximos = []
 
     for info in aniversarios.values():
         dia, mes = map(int, info["data"].split("/"))
-        data_aniver = datetime(hoje.year, mes, dia)
+        data_aniver = date(hoje.year, mes, dia)
+
         if data_aniver < hoje:
-            data_aniver = datetime(hoje.year + 1, mes, dia)
+            data_aniver = date(hoje.year + 1, mes, dia)
+
         diferenca = (data_aniver - hoje).days
         proximos.append((info["nome"], info["data"], diferenca))
 
@@ -150,7 +155,7 @@ async def proximo_aniver(interaction: discord.Interaction):
     else:
         msg = f"📅 O próximo aniversário é de **{nome}**, em **{dias} dias** ({data})."
 
-    await interaction.response.send_message(msg)
+    await interaction.followup.send(msg)
 
 
 # ----------------- COMANDO /SETAR_CANAL_ANIVERSARIO -----------------
