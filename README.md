@@ -32,7 +32,7 @@ python-dotenv para gerenciamento de variáveis de ambiente
 
 Instalação
 1. Clonar o repositório
-git clone https://github.com/SEU-USUARIO/SEU-REPO.git
+git clone https://github.com/hericota/Bot_aniversarios.git
 cd SEU-REPO
 
 2. Instalar dependências
